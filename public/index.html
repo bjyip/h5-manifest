@@ -14,4 +14,18 @@
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
+
+  <script>
+    self.addEventListener('install', event => {
+    /* event.waitUtil 用于在安装成功之前执行一些预装逻辑
+     但是建议只做一些轻量级和非常重要资源的缓存，减少安装失败的概率
+     安装成功后 ServiceWorker 状态会从 installing 变为 installed */
+    event.waitUntil( // Service Worker 事件回调的参数是一个 ExtendableEvent 对象，在 Service Worker 中需要使用 ExtendableEvent.waitUntil() 方法来保证生命周期的执行顺序
+      caches.open(PRECACHE) // 创建一个名为PRECACHE的新缓存
+          .then(cache => cache.addAll(preCacheUrls)) // preCacheUrls是相对于origin的url的数组，这些url就是你想要缓存的资源列表
+          .then(self.skipWaiting())
+    );
+});
+  </script>
+
 </html>
